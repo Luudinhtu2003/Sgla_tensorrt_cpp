@@ -94,7 +94,7 @@ static bool loadInitBox(const std::string& path, BBox& out) {
 // ─────────────────────────────────────────────────────────────────────────────
 //  Preprocessing
 // ─────────────────────────────────────────────────────────────────────────────
-static cv::Mat sampleTarget(const cv::Mat& im, const BBox& bb,
+static cv::Mat sampleTarget(const cv::Mat& im, const BBox& bb,     //H = W ?
                              float factor, int outSz, float& resizeFactor) {
     float cx = bb.x + 0.5f * bb.w;
     float cy = bb.y + 0.5f * bb.h;
@@ -133,7 +133,7 @@ static void preprocess(const cv::Mat& img, float* buf, int C, int H, int W) {
     }
 }
 
-static BBox clipBox(const BBox& box, int H, int W, int margin = 10) {
+static BBox clipBox(const BBox& box, int H, int W, int margin = 10) {  //margin = 10 ??
     float x1 = std::min(std::max(0.f, box.x),               (float)(W - margin));
     float y1 = std::min(std::max(0.f, box.y),               (float)(H - margin));
     float x2 = std::min(std::max((float)margin, box.x+box.w),(float)W);
@@ -244,7 +244,7 @@ static bool processSequence(const std::string& seqDir,
         float cy_prev  = state.y + 0.5f * state.h;
         float halfSide = 0.5f * 256.f / rz;
 
-        BBox newBox = { (pred_cx + cx_prev - halfSide) - 0.5f * pred_w,
+        BBox newBox = { (pred_cx + cx_prev - halfSide) - 0.5f * pred_w,   //Post processing  ???
                         (pred_cy + cy_prev - halfSide) - 0.5f * pred_h,
                         pred_w, pred_h };
         state = clipBox(newBox, H, W, 10);
@@ -297,8 +297,8 @@ int main(int argc, char** argv) {
 
     // ── CUDA alloc ─────────────────────────────────────────────────────────────
     void *d_template, *d_search, *d_output;
-    cudaMalloc(&d_template, 3*128*128*sizeof(float));
-    cudaMalloc(&d_search,   3*256*256*sizeof(float));
+    cudaMalloc(&d_template, 3*128*128*sizeof(float));   // 128 ???  Outputscore
+    cudaMalloc(&d_search,   3*256*256*sizeof(float));   // 256 ??
     cudaMalloc(&d_output,   4*sizeof(float));
 
     void* bindings[3];
@@ -318,7 +318,7 @@ int main(int argc, char** argv) {
     int ok = 0, fail = 0;
     for (const std::string& seqName : listSubDirs(datasetDir)) {
         std::cout << "\n[SEQ] " << seqName << "\n";
-        bool r = processSequence(datasetDir + "/" + seqName, seqName, outputDir,
+        bool r = processSequence(datasetDir + "/" + seqName, seqName, outputDir,  //score map. miss Track, output
                                  context,
                                  d_template, d_search, d_output,
                                  h_template, h_search, h_output,

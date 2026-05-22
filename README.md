@@ -75,3 +75,17 @@ chmod +x build.sh
 - Model input: template 128x128, search 256x256
 - Dùng `--fp16` khi convert engine để tận dụng FP16 trên Xavier NX (tăng tốc ~2x)
 - Nếu gặp lỗi binding name, kiểm tra tên input/output trong ONNX model phải là: `template`, `search`, `pred_boxes`
+
+
+
+
+### Problem
+
+
+- TemplateFactor, searchFactor is fixed
+- sample_target
+- How the network works?
+- Post processing
+- Output
+- Why miss track
+- margin = 10 (is fixed)
