@@ -19,7 +19,8 @@ include_directories(
 
 link_directories(${TENSORRT_LIB_DIR})
 
-add_executable(sgla_tracker src/main.cpp)
+add_executable(sgla_tracker src/sgla_trt_v1.cpp)
+
 
 target_link_libraries(sgla_tracker
     nvinfer
